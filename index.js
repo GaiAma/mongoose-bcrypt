@@ -1,8 +1,7 @@
 'use strict';
 
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
-var semver = require('semver');
 
 module.exports = function(schema, options) {
 
@@ -137,10 +136,8 @@ module.exports = function(schema, options) {
     }
   }
 
-  if (semver.gte(mongoose.version, "4.1.3")) {
-      schema.pre('update', preUpdate);
-      schema.pre('findOneAndUpdate', preUpdate);
-  }
+  schema.pre('update', preUpdate);
+  schema.pre('findOneAndUpdate', preUpdate);
 
   function encrypt(field, value, cb) {
     if (Promise) {

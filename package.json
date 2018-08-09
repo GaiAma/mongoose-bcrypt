@@ -30,10 +30,9 @@
     "url": "https://github.com/proswdev/mongoose-bcrypt/issues"
   },
   "homepage": "https://github.com/proswdev/mongoose-bcrypt",
-  "dependencies": {
-    "mongoose": "3.8.* || >=4",
-    "bcrypt-nodejs": "0.0.3",
-    "semver": ">=1.1.0"
+  "peerDependencies": {
+    "mongoose": "^5.2.5",
+    "bcrypt": "^3.0.0"
   },
   "devDependencies": {
     "bluebird": "^3.5.0",
