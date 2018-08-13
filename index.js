@@ -1,14 +1,14 @@
 'use strict';
 
-var bcrypt = require('bcrypt');
-var mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
 module.exports = function(schema, options) {
 
   options = options || {};
 
   // Get array of encrypted field(s)
-  var fields = options.fields || options.field || [];
+  let fields = options.fields || options.field || [];
   if (typeof fields === 'string') {
     fields = [ fields ];
   }
@@ -25,14 +25,14 @@ module.exports = function(schema, options) {
     fields.push('password');
 
   // Get encryption rounds or use defaults
-  var rounds = options.rounds || 0;
+  const rounds = options.rounds || 0;
 
   // Add properties and verifier functions to schema for each encrypted field
   fields.forEach(function(field){
 
     // Setup field name for camelcasing
-    var path = field.split('.');
-    var fieldName = path.map(function(word){
+    const path = field.split('.');
+    const fieldName = path.map(function(word){
       return word[0].toUpperCase() + word.slice(1);
     }).join('');
 
@@ -44,7 +44,7 @@ module.exports = function(schema, options) {
     // Define async verification function
     schema.methods['verify' + fieldName] = function(value, cb) {
       if (Promise) {
-        var self = this;
+        const self = this;
         return new Promise(function(resolve,reject) {
           bcrypt.compare(value, self.get(field), function(err, valid) {
             if (cb) {
@@ -69,9 +69,9 @@ module.exports = function(schema, options) {
 
     // Add field to schema if not already defined
     if (!schema.path(field)) {
-      var pwd = { };
-      var nested = pwd;
-      for (var i = 0; i < path.length-1; ++i) {
+      const pwd = { };
+      let nested = pwd;
+      for (const i = 0; i < path.length-1; ++i) {
         nested[path[i]] = {}
         nested = nested[path[i]];
       }
@@ -82,8 +82,8 @@ module.exports = function(schema, options) {
 
   // Hash all modified encrypted fields upon saving the model
   schema.pre('save', function preSavePassword(next) {
-    var model = this;
-    var changed = [];
+    const model = this;
+    const changed = [];
 
     // Determine list of encrypted fields that have been modified
     fields.forEach(function(field){
@@ -93,7 +93,7 @@ module.exports = function(schema, options) {
     });
 
     // Create/update hash for each modified encrypted field
-    var count = changed.length;
+    const count = changed.length;
     if (count > 0) {
       changed.forEach(function(field){
         encrypt(field, model.get(field), function(err, hash) {
@@ -109,18 +109,18 @@ module.exports = function(schema, options) {
   });
 
   function preUpdate(next) {
-    var query = this;
-    var update = query.getUpdate();
+    const query = this;
+    const update = query.getUpdate();
     if (update.$set) {
       update = update.$set;
     }
-    var changed = [];
+    const changed = [];
     fields.forEach(function(field){
       if (update[field]) {
         changed.push(field);
       }
     });
-    var count = changed.length;
+    const count = changed.length;
     if (count > 0) {
       changed.forEach(function(field){
         encrypt(field, update[field], function(err, hash) {

@@ -32,7 +32,7 @@
   "homepage": "https://github.com/proswdev/mongoose-bcrypt",
   "peerDependencies": {
     "mongoose": "^5.2.5",
-    "bcrypt": "^3.0.0"
+    "bcrypt": "^2.0.1"
   },
   "devDependencies": {
     "bluebird": "^3.5.0",
